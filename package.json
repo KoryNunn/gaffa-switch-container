@@ -1,0 +1,22 @@
+{
+  "name": "gaffa-switch-container",
+  "author": "Kory Nunn <knunn187@gmail.com>",
+  "version": "1.0.0",
+  "main": "switchContainer.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KoryNunn/gaffa-switch-container.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KoryNunn/gaffa-switch-container/issues"
+  },
+  "keywords": [
+    "gaffa",
+    "switch-container",
+    "view"
+  ],
+  "peerDependencies": {
+    "gaffa": "^1.0.0"
+  },
+  "license": "MIT"
+}
