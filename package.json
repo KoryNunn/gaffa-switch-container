@@ -16,7 +16,7 @@
     "view"
   ],
   "peerDependencies": {
-    "gaffa": "^1.0.0"
+    "gaffa": "^1.5.0"
   },
   "license": "MIT",
   "dependencies": {
