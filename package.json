@@ -18,5 +18,8 @@
   "peerDependencies": {
     "gaffa": "^1.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "statham": "^1.0.0"
+  }
 }

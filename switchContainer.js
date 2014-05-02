@@ -1,31 +1,22 @@
 var Gaffa = require('gaffa'),
-    crel = require('crel'),
-    viewType = "switchContainer",
-	cachedElement;
+    statham = require('statham'),
+    crel = require('crel');
 
 function SwitchContainer(){}
 SwitchContainer = Gaffa.createSpec(SwitchContainer, Gaffa.ContainerView);
-SwitchContainer.prototype.type = viewType;
+SwitchContainer.prototype._type = 'switchContainer';
 
 SwitchContainer.prototype.render = function(){
-
     var renderedElement = crel(this.tagName || 'div');
 
     this.views.content.element = renderedElement;
     this.renderedElement = renderedElement;
-
 };
 
 function createNewView(property, template, templateKey){
-    if(!property.templateCache){
-        property.templateCache= {};
-    }
-    var view = JSON.parse(
-        property.templateCache[templateKey] ||
-        (property.templateCache[templateKey] = JSON.stringify(template))
-    );
+    var view = statham.revive(template);
 
-    return property.gaffa.initialiseViewItem(view, property.gaffa, property.gaffa.views.constructors);
+    return property.gaffa.initialiseViewItem(view, property.gaffa, property.gaffa.views._constructors);
 }
 
 SwitchContainer.prototype.content = new Gaffa.Property(function(viewModel, value){
@@ -33,20 +24,24 @@ SwitchContainer.prototype.content = new Gaffa.Property(function(viewModel, value
         content = viewModel.views.content;
 
     // remove old view
-    while(content.length){
-        content[0].remove();
+    if(this._templatedView){
+        this._templatedView.remove();
+    }
+
+    if(!value && this.emptyTemplate){
+        content.add(createNewView(this, this.emptyTemplate, 'emptyTemplate'));
+        return;
     }
 
     template = this.templates && this.templates[value] || this.emptyTemplate;
 
     if(!template){
-        if(this.emptyTemplate){
-            content.add(createNewView(this, this.emptyTemplate, 'emptyTemplate'));
-        }
         return;
     }
 
-    content.add(createNewView(this, template, 'templates-' + value));
+    this._templatedView = createNewView(this, template, 'templates-' + value);
+
+    content.add(this._templatedView);
 });
 
 module.exports = SwitchContainer;
