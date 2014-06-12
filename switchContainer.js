@@ -13,12 +13,6 @@ SwitchContainer.prototype.render = function(){
     this.renderedElement = renderedElement;
 };
 
-function createNewView(property, template, templateKey){
-    var view = statham.revive(template);
-
-    return property.gaffa.initialiseViewItem(view, property.gaffa, property.gaffa.views._constructors);
-}
-
 SwitchContainer.prototype.content = new Gaffa.Property(function(viewModel, value){
     var template,
         content = viewModel.views.content;
@@ -29,7 +23,7 @@ SwitchContainer.prototype.content = new Gaffa.Property(function(viewModel, value
     }
 
     if(!value && this.emptyTemplate){
-        content.add(createNewView(this, this.emptyTemplate, 'emptyTemplate'));
+        this._templatedView = content.add(this.gaffa.initialiseView(statham.revive(this.emptyTemplate)));
         return;
     }
 
@@ -39,9 +33,7 @@ SwitchContainer.prototype.content = new Gaffa.Property(function(viewModel, value
         return;
     }
 
-    this._templatedView = createNewView(this, template, 'templates-' + value);
-
-    content.add(this._templatedView);
+    this._templatedView = content.add(this.gaffa.initialiseView(statham.revive(template)));
 });
 
 module.exports = SwitchContainer;
