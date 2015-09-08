@@ -1,5 +1,6 @@
 var Gaffa = require('gaffa'),
-    crel = require('crel');
+    crel = require('crel'),
+    statham = require('statham');
 
 function SwitchContainer(){}
 SwitchContainer = Gaffa.createSpec(SwitchContainer, Gaffa.ContainerView);
@@ -16,6 +17,8 @@ SwitchContainer.prototype.content = new Gaffa.Property(function(viewModel, value
     var template,
         content = viewModel.views.content;
 
+    this._templates = this._templates || {};
+
     // remove old view
     if(this._templatedView){
         this._templatedView.remove();
@@ -26,20 +29,20 @@ SwitchContainer.prototype.content = new Gaffa.Property(function(viewModel, value
             return;
         }
 
-        if(!(this.emptyTemplate instanceof Gaffa.View)){
-            this.emptyTemplate = viewModel.gaffa.initialiseView(this.emptyTemplate);
+        if(!this._templates.emptyTemplate){
+            this._templates.emptyTemplate = statham.stringify(this.emptyTemplate);
         }
 
-        template = this.emptyTemplate;
+        template = this._templates.emptyTemplate;
     } else {
-        if(!(this.templates[value] instanceof Gaffa.View)){
-            this.templates[value] = viewModel.gaffa.initialiseView(this.templates[value]);
+        if(!this._templates[value]){
+            this._templates[value] = statham.stringify(this.templates[value]);
         }
 
-        template = this.templates[value];
+        template = this._templates[value];
     }
 
-    this._templatedView = content.add(template._clone());
+    this._templatedView = content.add(viewModel.gaffa.initialiseView(statham.parse(template)));
 });
 
 module.exports = SwitchContainer;
